@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>越南语听力练习</title>
+    <title>越南语口语练习</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,7 +65,7 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 95%;
+            width: 100%;
             max-width: 800px;
             background: #f7fbf3;
             border: 3px solid #f7fbf3;
@@ -116,8 +116,8 @@
             border: 2px solid #fed16a;
         }
         #indicator {
-            width: 95%;
-            max-width: 700px;
+            width: 90%; 
+            max-width: 650px;
             min-height: 50px;
             margin: 10px auto;
             padding: 5px;
@@ -129,9 +129,26 @@
             justify-content: center;
             align-items: center;
             white-space: pre-line;
-            font-size: clamp(20px, 2.5vw, 24px);
+            font-size: clamp(16px, 2.5vw, 20px);
             text-align: left;
             padding-left: 20px;
+        }
+        #guideBox {
+            width: 95%;
+            max-width: 700px;
+            margin: 10px auto;
+            padding: 15px;
+            border: 2px solid #85ae5f;
+            background: #dae6cf;
+            color: #4f6839;
+            border-radius: 10px;
+            text-align: left;
+            font-size: clamp(14px, 1.8vw, 16px);
+            line-height: 1.6;
+        }
+        #guideBox h4 {
+            margin-top: 0;
+            color: #27341c;
         }
         #optionsContainer {
             width: 100%;
@@ -184,8 +201,12 @@
                 font-size: clamp(14px, 2vw, 16px);
             }
             #indicator {
-                min-height: 40px;
+			width: 90%;
+            min-height: 40px;
             }
+			#guideBox {
+            width: 90%;
+			}
             #results {
                 font-size: 24px;
                 width: 95%;
@@ -195,10 +216,23 @@
 </head>
 <body>
     <div id="gameContainer">
-        <div id="infoBox">习得越南语<br>听力练习</div>
+        <div id="infoBox">习得越南语<br>口语练习</div>
         <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
         <div id="instructionBox">听问题并录音回答</div>
         <div id="indicator"></div>
+        <div id="guideBox">
+            <h4>使用说明：</h4>
+            <ul>
+                <li>【自由模式】：浏览口语题目内容。点击〖显示-隐藏〗按钮可查看题目内容。</li>
+                <li>【作业模式】：听题目内容并录制回答。</li>
+                <li>听完题目内容后，请点击〖录音〗按钮开始作答。</li>
+                <li>回答完成后点击〖停止录音〗结束录制。</li>
+                <li>可通过〖检查录音〗按钮回放录制内容，若不满意可再次点击〖录音〗重新录制。</li>
+                <li>点击〖继续〗按钮进入下一题。</li>
+                <li>完成最后一道题后，点击〖继续〗将会把所有录音文件打包成.ZIP压缩包，请将该文件发送给老师。</li>
+				<li> 温馨提示：微信内直接打开链接不支持下载.ZIP压缩文件。请使用其他浏览器打开链接即可正常使用。</li>
+            </ul>
+        </div>
         <div id="optionsContainer"></div>
         <div id="results"></div>
     </div>
@@ -222,6 +256,7 @@
     </div>
     <audio id="mainAudio"></audio>
     <audio id="signalAudio" src="YeuCau.mp3"></audio>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
@@ -253,11 +288,32 @@
         let recordedAnswers = [];
         let isRecording = false;
 
-        const sentences = [
-            { "audioFile": "audio.mp3", "start": 0.302292, "end": 1.142292, "Question": "Bạn tên là gì?" },
-            { "audioFile": "audio.mp3", "start": 1.652292, "end": 2.592292, "Question": "Bạn sống ở đâu?" },
-            { "audioFile": "audio.mp3", "start": 3.072292, "end": 3.812292, "Question": "Bạn học tiếng Việt bao lâu rồi?" },
-        ];
+const sentences = [
+    {
+        "audioFile": "audio.mp3",
+        "start": 0.193677,
+        "end": 6.757175,
+        "Question": "Bạn thích đi du lịch một mình, với gia đình hay với bạn bè? Hãy cho biết lý do ?"
+    },
+    {
+        "audioFile": "audio.mp3",
+        "start": 7.187569,
+        "end": 12.610525,
+        "Question": "Bạn thích sống ở thành phố hay nông thôn? Hãy cho biết lý do ?"
+    },
+    {
+        "audioFile": "audio.mp3",
+        "start": 13.277634,
+        "end": 19.819613,
+        "Question": "Theo bạn cùng sở thích có phải là yếu tố quyết định tình bạn lâu dài không? Vì sao?"
+    },
+    {
+        "audioFile": "audio.mp3",
+        "start": 20.216514,
+        "end": 38.567858,
+        "Question": "Mua sắm là nhu cầu thiết yếu của con người, bạn thích loại hình mua sắm nào? Mua sắm trực tiếp (chợ/ siêu thị/ trung tâm thương mại), Mua sắm trực tuyến (trên mạng/ online).Bạn sẽ chọn giải pháp nào? Tại sao?"
+    }
+];
 
         // Hàm chuyển đổi định dạng audio từ WebM sang WAV
         function convertToWav(blob) {
@@ -348,7 +404,7 @@
             let questionText = sentences[currentIndex].Question;
 
             if (isFreeMode) {
-                indicator.innerHTML = showQuestion ? `<div style="font-weight: bold; color: #85ae5f; text-align: center;">${questionText}</div>` : '';
+                indicator.innerHTML = showQuestion ? `<div style="font-weight: bold; color: #85ae5f; text-align: left;">${questionText}</div>` : '';
             } else {
                 indicator.innerHTML = '';
             }
@@ -492,19 +548,26 @@
             }
         }
         
-        async function saveAllRecordings() {
-            if (recordedAnswers.length === 0) {
-                alert("Không có bản ghi nào để lưu.");
-                return;
-            }
-
-            for (let i = 0; i < recordedAnswers.length; i++) {
+        async function saveRecordings() {
+            const zip = new JSZip();
+            
+            for (let i = 0; i < sentences.length; i++) {
+                const folder = zip.folder(`Q${i + 1}`);
+                
+                // Thêm file txt câu hỏi
+                const questionText = sentences[i].Question;
+                folder.file('Question.txt', questionText);
+                
+                // Thêm file ghi âm câu trả lời (đã chuyển đổi sang WAV)
                 if (recordedAnswers[i]) {
-                    const filename = `Answer_Q${i + 1}.wav`;
-                    saveAs(recordedAnswers[i], filename);
+                    folder.file(`Answer_Q${i + 1}.wav`, recordedAnswers[i]);
                 }
             }
-            alert("Tất cả các bản ghi âm đã được tải xuống.");
+
+            zip.generateAsync({ type: "blob" })
+                .then(function(content) {
+                    saveAs(content, "越南语口语练习1.zip");
+                });
         }
         
         function resetTestMode() {
@@ -578,8 +641,8 @@
             if (isRecording) stopRecording();
             
             if (currentIndex === sentences.length - 1) {
-                if (window.confirm("Bạn muốn lưu lại tất cả các bản ghi âm?")) {
-                    await saveAllRecordings();
+                if (window.confirm("Bạn muốn lưu lại bản ghi âm?")) {
+                    await saveRecordings();
                 }
                 resetTestMode();
             } else {
